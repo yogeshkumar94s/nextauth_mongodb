@@ -1,21 +1,18 @@
-import { error } from "console";
 import mongoose from "mongoose";
 
-export async function connect() {
-    try {
-        mongoose.connect(process.env.MONGODB_URI!)
-        const connection = mongoose.connection
-        connection.on('connected', () => {
-            console.log('MongoDB connected');
-        })
+// connect function for establishing a connection to MongoDB using Mongoose. 
 
-        connection.on('error', (error) => {
-            console.log('MongoDB connection error, Please make sure db is up and running: ' + error);
-            process.exit(); 
-        })
-        
+export async function connect() {
+    if (!process.env.MONGODB_URI) {
+        console.error('MONGODB_URI must be defined');
+        process.exit(1); // Exit with failure code
+    }
+
+    try {
+        await mongoose.connect(process.env.MONGODB_URI);
+        console.log('MongoDB connected');
     } catch (error) {
-        console.log("Something went wrong in connecting to db");
-        console.log(error);        
+        console.error('MongoDB connection error:', error);
+        process.exit(1); // Exit with failure code
     }
 }

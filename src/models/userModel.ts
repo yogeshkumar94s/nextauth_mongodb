@@ -1,16 +1,21 @@
 import mongoose from "mongoose";
 
+// MongoDB schema for a user model using Mongoose covers many essential fields for user management, such as authentication, verification, and role assignment.
+
 const userSchema = new mongoose.Schema({
     username: { 
         type: String,
         required: [true, "Please provide a username"],
         unique: true
     },
+
     email: { 
         type: String,
         required: [true, "Please provide an email"],
-        unique: true
-    },
+        unique: true,
+        index: true,
+     },
+
     password: { 
         type: String,
         required: [true, "Please provide password"],
@@ -27,7 +32,7 @@ const userSchema = new mongoose.Schema({
     forgotPasswordTokenExpiry: Date,
     verifyToken: String,
     verifyTokenExpiry: Date,    
-});
+}, { timestamps: true });   //
 
 const User = mongoose.models.users || mongoose.model("users", userSchema);
 
